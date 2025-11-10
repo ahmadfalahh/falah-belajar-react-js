@@ -1,80 +1,89 @@
 # Optimasi Performa React dengan Caching
 
-**Nama:** Rosyid Stania Ardiyan Putra 
-**NIM:** V3424075  
+**Nama:** Ahmad Alaudin Falah  
+**NIM:** V3424082  
 **Kelas:** TIC 24  
-**Mata Kuliah:** Pemrograman Front-End
+**Mata Kuliah:** Pemrograman Front-End  
 
 ---
 
-## 🎯 Tujuan
-Menganalisis perbedaan performa aplikasi Point of Sales (POS) antara implementasi **tanpa cache** dan **dengan cache**, serta memahami dampak caching terhadap pengalaman pengguna.
+## Tujuan
+
+Proyek ini bertujuan untuk menganalisis perbedaan performa aplikasi **Point of Sales (POS)** antara implementasi **tanpa cache** dan **dengan cache**, serta menilai dampaknya terhadap efisiensi dan pengalaman pengguna.
 
 ---
 
-## 📋 Metodologi
-- Aplikasi digunakan: **Point of Sales** dengan **10.000 data produk**
-- Pengujian dilakukan dengan melakukan pencarian `"produk 5000"` secara berulang
-- Tools analisis:
-  - React DevTools Profiler
-  - Browser Console
-- Metrik performa:
-  - Waktu render
-  - Konsistensi respons
-  - Beban komputasi
+## Latar Belakang
+
+Caching merupakan teknik penyimpanan data sementara untuk mempercepat proses akses data yang sering digunakan.  
+Dalam aplikasi React, caching dapat membantu mengurangi waktu render dan beban komputasi ketika melakukan operasi berulang, seperti pencarian produk dalam sistem Point of Sales.
 
 ---
 
-## 🔴 Versi Tanpa Cache
+## Metodologi
 
-**Karakteristik:**
-- Setiap pencarian menghitung ulang dari awal
-- Tidak ada penyimpanan hasil sebelumnya
-- Beban komputasi konsisten tinggi
+- **Aplikasi yang diuji:** Point of Sales dengan **10.000 data produk**  
+- **Skenario pengujian:** Melakukan pencarian berulang untuk `"produk 5000"`  
+- **Tools yang digunakan:**
+  - React DevTools Profiler  
+  - Browser Console  
+- **Metrik yang diukur:**
+  - Waktu render  
+  - Konsistensi hasil  
+  - Beban komputasi CPU  
 
-### 📸 Screenshot Profiling (Tanpa Cache)
-Console Log:
-![No Cache Console](./images/NoCacheConsole.png)
+---
 
-Profiling (React Profiler):
-![No Cache Profiler](./images/NoCacheProfiler.png)
+## Versi Tanpa Cache
 
-**Performa:**
+### Karakteristik
+- Setiap pencarian dilakukan dari awal tanpa penyimpanan hasil sebelumnya  
+- Beban CPU dan waktu render tetap konstan  
+- Tidak ada optimasi memori  
+
+### Hasil Profiling
+**Console Log:**  
+![No Cache Console](./images/NoCacheConsole.png)  
+
+**React Profiler:**  
+![No Cache Profiler](./images/NoCacheProfiler.png)  
+
 | Pengujian | Waktu Render |
-|----------|-------------|
-| Pencarian Pertama | 1.0ms |
-| Pencarian Berulang | 1.0ms |
+|------------|--------------|
+| Pencarian Pertama | 1.0 ms |
+| Pencarian Berulang | 1.0 ms |
 
 ---
 
-## 🟢 Versi Dengan Cache
+## Versi Dengan Cache
 
-**Karakteristik:**
-- Hasil pencarian disimpan ke cache memory
-- Pencarian berulang menjadi instan
-- Beban CPU turun signifikan
+### Karakteristik
+- Hasil pencarian disimpan dalam **cache memory (Map)**  
+- Pencarian berulang lebih cepat (cache hit)  
+- Beban CPU menurun drastis  
 
-### 📸 Screenshot Profiling (Dengan Cache)
-Console Log:
-![Cache Console](./images/CacheConsole.png)
+### Hasil Profiling
+**Console Log:**  
+![Cache Console](./images/CacheConsole.png)  
 
-Profiling (React Profiler):
-![Cache Profiler](./images/CacheProfiler.png)
+**React Profiler:**  
+![Cache Profiler](./images/CacheProfiler.png)  
 
-**Performa:**
 | Pengujian | Waktu Render |
-|----------|-------------|
-| Pencarian Pertama (Cache MISS) | 1.0ms |
-| Pencarian Berulang (Cache HIT) | 0.4ms |
+|------------|--------------|
+| Pencarian Pertama (Cache MISS) | 1.0 ms |
+| Pencarian Ulang (Cache HIT) | 0.4 ms |
 
-**Improvement:** **60% lebih cepat**
+ **Peningkatan performa:** sekitar **60% lebih cepat**
 
 ---
 
-## 💻 Implementasi Cache
+## Implementasi Caching
+
+Berikut contoh implementasi sederhana caching menggunakan **Map** di React:
 
 ```javascript
-// Cache mechanism
+// cache.js
 const searchCache = new Map();
 const MAX_CACHE_SIZE = 50;
 
